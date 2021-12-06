@@ -8,11 +8,11 @@ from image_matching import Image_Matching
 class Image_Stitching(Image_Matching):
     def __init__(self):
         super(Image_Stitching, self).__init__()
-        self.smoothing_window_size = 200
+        self.smoothing_window_size = 20
 
     def set_smoothing_window(self,img1,img2):
         if self.smoothing_window_size>max(img1.shape[1],img2.shape[1]) \
-                or self.smoothing_window_size<min(img1.shape[1]/4,img2.shape[1]/4):
+                or self.smoothing_window_size<min(img1.shape[1]/100,img2.shape[1]/100):
             self.smoothing_window_size = int((img1.shape[1] + img2.shape[1])/4)
 
     def create_mask(self, img1, img2, version):
@@ -77,6 +77,7 @@ class Image_Stitching(Image_Matching):
         min_row, max_row = min(rows), max(rows) + 1
         min_col, max_col = min(cols), max(cols) + 1
         stitch = panorama[min_row:max_row, min_col:max_col, :]
+
         if with_mask:
             cv2.imwrite('./results/stitch.jpg', stitch)
         else:
@@ -88,8 +89,8 @@ class Image_Stitching(Image_Matching):
 
 if __name__ == '__main__':
 
-    path1 = '../data/building1.jpg'
-    path2 = '../data/building2.jpg'
+    path1 = '../data/montain1.jpg'
+    path2 = '../data/montain2.jpg'
     result_dir = './results/'
     if not os.path.exists(result_dir):
         os.mkdir(result_dir)

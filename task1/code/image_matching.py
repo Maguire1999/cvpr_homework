@@ -13,11 +13,21 @@ class Image_Matching():
         gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
         sift = cv2.SIFT_create()  # sift为实例化的sift函数
         kp = sift.detect(img, None)  # 找出图像中的关键点
-        img_draw = cv2.drawKeypoints(gray, kp, img_copy)  # 画出图像中的关键点
+        img_draw = cv2.drawKeypoints(img_copy, kp, img_copy)  # 画出图像中的关键点
         kp, dst = sift.detectAndCompute(gray, None)
         path = './results/sift_keypoints_' + str(name) + '.jpg'
         cv2.imwrite(path, img_draw)
         return kp, dst
+    def get_info(self,img):
+        kp, dst = self.get_sift(img,'demo')
+        for i in range(1):
+            print("关键点", i)
+            print("数据类型:", type(kp[i]))
+            print("关键点坐标:", kp[i].pt)
+            print("邻域直径:", kp[i].size)
+            print("方向:", kp[i].angle)
+            print("所在的图像金字塔的组:", kp[i].octave)
+            print("================")
     def get_Homography(self, img1, img2):
         
         kp1, des1 = self.get_sift(img1,'1')
@@ -58,4 +68,5 @@ if __name__ == '__main__':
     img1 = cv2.imread(path1)
     img2 = cv2.imread(path2)
     macher = Image_Matching()
+    macher.get_info(img2)
     H = macher.get_Homography(img1, img2)
